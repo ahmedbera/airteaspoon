@@ -7,7 +7,7 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-const botID = secrets.mentions.test;
+const botID = secrets.mentions.prod;
 
 client.on('message', message => {
   if(message.content == botID) {
