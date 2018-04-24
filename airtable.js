@@ -35,6 +35,58 @@ var getAllRemainingTasks = function () {
     })
 }
 
+var getChapterInfo = function(series, chapter) {
+    let _series = series.toLowerCase()
+    if(alias[_series]) {
+        series = alias[_series]
+    }
+    let response = "";
+    return new Promise((resolve,reject) => {
+        base('Chapters').select({
+            view: "Grid view",
+            filterByFormula: `AND(Ch = "${chapter}" , {Series Name} = "${series}")`
+        }).eachPage((records, fetchNextPage) => {
+            records.forEach((record) => {
+                response += "# " + record.get("Series Name") + "\n";
+                response += "  [Ch. " + record.get("Ch") + "]";
+                response += record.get("Vol") != undefined ? "[Vol. " + record.get("Vol") + "]\n" : "\n";
+                response += "  " + record.get("Chapter name") + "\n";
+
+                let rawCredits = record.get("CreditsForJules");
+                let roleArray = rawCredits.split("|")
+                roleArray.forEach((e) => {
+                    var role = e.split(":")[0]
+                    var slave = e.split(":")[1]
+                    if(slave) { response += "<" + role + ": " + slave + ">\n" }
+                });
+            });
+            fetchNextPage();
+        }, function done(err) {
+            if(err) {
+                console.log(err);
+                reject();
+            }
+            if(response == "") {
+                reject("Couldn't find chapter information");
+            }
+            resolve(response);
+        });
+    });
+}
+
+const alias = {
+    "hori" : "Hori",
+    "horimiya" : "Hori",
+    "nnw" : "NNW",
+    "taka" : "Takagi",
+    "takagi" : "Takagi",
+    "wota": "Wotakoi",
+    "wotakoi" : "Wotakoi",
+    "horus" : "Horus",
+    "central" : "Central",
+    "asian cooking" : "Central"
+}
+
 var getTeaspoonName = function (id) {
     return new Promise((resolve, reject) => {
         base('Teaspoons').find(id, function (err, record) {
@@ -48,5 +100,6 @@ var getTeaspoonName = function (id) {
 }
 
 module.exports = Airtablespoon = {
-    getAllRemainingTasks: getAllRemainingTasks
+    getAllRemainingTasks: getAllRemainingTasks,
+    getChapterInfo : getChapterInfo
 }
