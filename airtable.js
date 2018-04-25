@@ -59,6 +59,12 @@ var getChapterInfo = function(series, chapter) {
                     var slave = e.split(":")[1]
                     if(slave) { response += "<" + role + ": " + slave + ">\n" }
                 });
+                if(record.get("Comment") != undefined) {
+                    response += `\n/* TO DO: ${record.get("Tracking Progress").toString().split(',').join(', ')} */`
+                }
+                if(record.get("Comment") != undefined) {
+                    response += `\nNotes: ${record.get("Comment")}`
+                }
             });
             fetchNextPage();
         }, function done(err) {
@@ -78,6 +84,7 @@ const alias = {
     "hori" : "Hori",
     "horimiya" : "Hori",
     "nnw" : "NNW",
+    "north" : "NNW",
     "taka" : "Takagi",
     "takagi" : "Takagi",
     "wota": "Wotakoi",
