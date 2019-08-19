@@ -19,7 +19,7 @@ const clock = {
 
 client.on('message', message => {
     // if  user has teaspoon or bff role
-    if(message.member.roles.find(r => role.name == "Teaspoon" || role.name == "BFF")) {
+    if(message.member.roles.find(r => r.name == "Teaspoon" || r.name == "BFF")) {
         // @manager-san
         if (message.content == botID) {
             airteaspoon.getAllRemainingTasks().then((res) => {
